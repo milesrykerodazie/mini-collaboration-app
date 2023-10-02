@@ -1,0 +1,204 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum MemberRole {
+  ADMIN
+  MODERATOR
+  GUEST
+}
+
+enum ChannelType {
+  TEXT
+  AUDIO
+  VIDEO
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model user {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  username      String?   @unique @default(nanoid(12))
+  bio           String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  Account   Account[]
+  Session   Session[]
+  Server    Server[]
+  Member    Member[]
+  Channel   Channel[]
+  userImage userImage?
+}
+
+model userImage {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  public_id String @unique
+  url       String @default("")
+  userId    String @unique @db.ObjectId
+  user      user   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Server {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  name       String  @unique
+  imageUrl   String?
+  inviteCode String  @unique
+
+  userId String @db.ObjectId
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  members     Member[]
+  channels    Channel[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  serverImage ServerImage?
+}
+
+model ServerImage {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  public_id String @unique
+  url       String @default("")
+  serverId  String @unique @db.ObjectId
+  server    Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+}
+
+model Member {
+  id   String     @id @default(auto()) @map("_id") @db.ObjectId
+  role MemberRole @default(GUEST)
+
+  userId String @db.ObjectId
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  serverId String @db.ObjectId
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  messages               Message[]
+  conversationsInitiated Conversation[]  @relation("MemberOne")
+  conversationsReceived  Conversation[]  @relation("MemberTwo")
+  directMessages         DirectMessage[]
+}
+
+model Channel {
+  id   String      @id @default(auto()) @map("_id") @db.ObjectId
+  name String      @unique
+  type ChannelType @default(TEXT)
+
+  userId String @db.ObjectId
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  serverId String @db.ObjectId
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[]
+}
+
+model Message {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  content  String
+  fileType String?
+  fileUrl  String?
+  fileName String?
+
+  memberId String @db.ObjectId
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  channelId String  @db.ObjectId
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  deleted Boolean @default(false)
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  MessageFile MessageFile?
+}
+
+model MessageFile {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  public_id String  @unique
+  url       String  @default("")
+  messageId String  @unique @db.ObjectId
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  memberOneId String @db.ObjectId
+  memberOne   Member @relation("MemberOne", fields: [memberOneId], references: [id], onDelete: Cascade)
+
+  memberTwoId String @db.ObjectId
+  memberTwo   Member @relation("MemberTwo", fields: [memberTwoId], references: [id], onDelete: Cascade)
+
+  directMessages DirectMessage[]
+}
+
+model DirectMessage {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  content  String
+  fileType String?
+  fileUrl  String?
+  fileName String?
+
+  memberId String @db.ObjectId
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  conversationId String       @db.ObjectId
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  deleted Boolean @default(false)
+
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  DirectMessageFile DirectMessageFile?
+}
+
+model DirectMessageFile {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  public_id       String        @unique
+  url             String        @default("")
+  directMessageId String        @unique @db.ObjectId
+  directMessage   DirectMessage @relation(fields: [directMessageId], references: [id], onDelete: Cascade)
+}
