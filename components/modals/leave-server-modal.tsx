@@ -43,12 +43,12 @@ export const LeaveServerModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
+      <DialogContent className="bg-white text-primary p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
             Leave Server
           </DialogTitle>
-          <DialogDescription className="text-center text-gray-500">
+          <DialogDescription className="text-center text-gray-700">
             Are you sure you want to leave{" "}
             <span className="font-semibold text-gray-500">{server?.name}</span>?
           </DialogDescription>

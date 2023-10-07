@@ -44,14 +44,14 @@ export const ServerChannel = ({
     <button
       onClick={onClick}
       className={cn(
-        "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-gray-700/10 dark:hover:bg-gray-700/50 transition mb-1",
-        params?.channelId === channel.id && "bg-gray-700/20 dark:bg-gray-700"
+        "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full  transition mb-1",
+        params?.channelId === channel.id && "bg-gray-700/10 dark:bg-gray-800"
       )}
     >
-      <Icon className="flex-shrink-0 w-5 h-5 text-gray-500 dark:text-gray-400" />
+      <Icon className="flex-shrink-0 w-5 h-5" />
       <p
         className={cn(
-          "line-clamp-1 font-semibold text-sm text-gray-500 group-hover:text-gray-600 dark:text-gray-400 dark:group-hover:text-gray-300 transition",
+          "line-clamp-1 font-semibold text-sm group-hover:text-gray-600  dark:group-hover:text-gray-200 transition",
           params?.channelId === channel.id &&
             "text-primary dark:text-gray-200 dark:group-hover:text-white"
         )}
@@ -63,7 +63,7 @@ export const ServerChannel = ({
           <ActionTooltip label="Edit">
             <Edit
               onClick={(e) => onAction(e, "editChannel")}
-              className="hidden group-hover:block w-4 h-4 text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 transition"
+              className="hidden group-hover:block w-4 h-4 transition"
             />
           </ActionTooltip>
           <ActionTooltip label="Delete">
@@ -74,9 +74,7 @@ export const ServerChannel = ({
           </ActionTooltip>
         </div>
       )}
-      {channel.name === "general" && (
-        <Lock className="ml-auto w-4 h-4 text-gray-500 dark:text-gray-400" />
-      )}
+      {channel.name === "general" && <Lock className="ml-auto w-4 h-4 " />}
     </button>
   );
 };

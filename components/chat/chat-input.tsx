@@ -77,15 +77,15 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
         <button
           type="button"
           onClick={() => onOpen("messageFile", { apiUrl, query })}
-          className="absolute top-2 left-2 h-[24px] w-[24px] bg-gray-500 dark:bg-gray-400 hover:bg-gray-600 dark:hover:bg-gray-300 transition rounded-full p-1 flex items-center justify-center"
+          className="absolute top-2 left-2 h-[24px] w-[24px] bg-gray-500 dark:bg-gray-300 hover:bg-gray-600 dark:hover:bg-gray-200 transition rounded-full p-1 flex items-center justify-center"
         >
-          <Plus className="text-white dark:text-gray-500" />
+          <Plus className="text-white dark:text-gray-800 transition" />
         </button>
         <Input
           disabled={isLoading}
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="px-10 py-5 bg-gray-200/90 dark:bg-gray-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-600 dark:text-gray-200"
+          className="px-10 py-5 bg-gray-200/90 dark:bg-gray-700/75 border-none border-0 rounded-md focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-600 dark:text-gray-200"
           placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
         />
         <div className="absolute top-2 right-2">

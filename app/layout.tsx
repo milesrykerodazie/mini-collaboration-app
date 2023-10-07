@@ -25,10 +25,10 @@ export default async function RootLayout({
   const session = await getCurrentUser();
   return (
     <html lang="en">
-      <body className={cn(font.className, "bg-white dark:bg-mainDark")}>
+      <body className={cn(font.className, "")}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem
           storageKey="collaboration-theme"
         >

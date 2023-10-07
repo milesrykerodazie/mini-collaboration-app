@@ -62,54 +62,58 @@ const LoginForm = () => {
   };
   return (
     <Card className="w-full md:w-4/5 lg:w-1/2">
-      <CardContent className="bg-white text-black">
+      <CardContent className="bg-white rounded-lg">
         <CardHeader className="pt-8 px-6">
-          <CardTitle className="text-2xl text-center font-bold">
+          <CardTitle className="text-2xl text-center font-bold text-primary">
             Login
           </CardTitle>
-          <CardDescription className="text-center text-gray-500">
+          <CardDescription className="text-center text-gray-700">
             Welcome back
           </CardDescription>
         </CardHeader>
         <div className="space-y-3 w-full">
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-primary">
+              Email
+            </Label>
             <Input
               type="email"
               id="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="Email"
-              className="focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border-primary text-gray-800 "
             />
           </div>
 
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-primary">
+              Password
+            </Label>
             <Input
               type="password"
               id="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Password"
-              className="focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border-primary text-gray-800"
             />
           </div>
         </div>
         <div className="mt-3 flex flex-col items-center w-full justify-center">
-          <CardFooter className="w-full">
+          <CardFooter className="">
             <Button onClick={handleLogin} className="w-full">
               Login
             </Button>
           </CardFooter>
 
-          <CardFooter className="w-full">
+          <CardFooter className="">
             <Button onClick={() => signIn("google")} className="w-full">
               <FcGoogle className="mr-3" />
               Login With Google
             </Button>
           </CardFooter>
-          <CardContent>
+          <CardContent className="text-primary">
             <div className="text-center font-light">
               <p>
                 Dont have an account?

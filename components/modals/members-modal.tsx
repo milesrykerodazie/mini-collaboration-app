@@ -99,7 +99,7 @@ export const MembersModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black overflow-hidden">
+      <DialogContent className="bg-white text-primary overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
             Manage Members
@@ -113,11 +113,11 @@ export const MembersModal = () => {
             <div key={member.id} className="flex items-center gap-x-2 mb-6">
               <UserAvatar src={member.user.image} />
               <div className="flex flex-col gap-y-1">
-                <div className="text-xs font-semibold flex items-center gap-x-1">
+                <div className="text-xs font-semibold flex items-center gap-x-1 text-gray-700">
                   {member.user.name}
                   {roleIconMap[member.role]}
                 </div>
-                <p className="text-xs text-gray-500">{member.user.email}</p>
+                <p className="text-xs text-gray-600">{member.user.email}</p>
               </div>
               {server.userId !== member.userId && loadingId !== member.id && (
                 <div className="ml-auto">

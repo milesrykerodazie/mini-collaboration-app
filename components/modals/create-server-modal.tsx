@@ -131,12 +131,12 @@ export const CreateServerModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-white text-black py-5 overflow-hidden">
+      <DialogContent className="bg-white py-5 overflow-hidden text-primary">
         <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-2xl text-center font-bold">
+          <DialogTitle className="text-2xl text-center font-bold text-primary">
             Customize your server
           </DialogTitle>
-          <DialogDescription className="text-center text-gray-500">
+          <DialogDescription className="text-center text-gray-700">
             Give your server a personality with a name and an image. You can
             always change it later.
           </DialogDescription>
@@ -144,14 +144,14 @@ export const CreateServerModal = () => {
         <form onSubmit={handleSubmit} className="mx-5 space-y-4">
           <div
             {...getRootProps()}
-            className="border-2 border-dashed flex flex-col justify-center items-center rounded-lg p-10 cursor-pointer"
+            className="border-2 border-dashed border-primary flex flex-col justify-center items-center rounded-lg p-10 cursor-pointer"
           >
             <input {...getInputProps()} />
-            <UploadCloud className="h-10 w-10 fill-gray-200 stroke-gray-400" />
+            <UploadCloud className="h-10 w-10 fill-white stroke-gray-500" />
             {image !== null ? (
               <p className="text-center font-thin">{image?.name}</p>
             ) : (
-              <p className="text-center font-thin">
+              <p className="text-center font-thin text-gray-700">
                 Drag 'n' drop an image here,
                 <br /> or click to select one
               </p>
@@ -196,7 +196,7 @@ export const CreateServerModal = () => {
                 }))
               }
               placeholder="Enter server name here."
-              className="focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border-primary text-gray-800"
             />
           </div>
           <DialogFooter className="px-1 py-3 rounded-md">

@@ -111,16 +111,18 @@ const RegisterForm = () => {
     <Card className="w-full md:w-4/5 lg:w-1/2">
       <CardContent className="bg-white text-black">
         <CardHeader className="pt-8 px-6">
-          <CardTitle className="text-2xl text-center font-bold">
+          <CardTitle className="text-2xl text-center font-bold text-primary">
             Register
           </CardTitle>
-          <CardDescription className="text-center text-gray-500">
+          <CardDescription className="text-center text-gray-700">
             We are happy to have you on our platform!
           </CardDescription>
         </CardHeader>
         <div className="space-y-3 w-full">
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name" className="text-primary">
+              Name
+            </Label>
             <Input
               type="text"
               id="name"
@@ -128,11 +130,13 @@ const RegisterForm = () => {
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="Name"
-              className="focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border-primary text-gray-800"
             />
           </div>
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-primary">
+              Email
+            </Label>
             <Input
               type="email"
               id="email"
@@ -140,11 +144,13 @@ const RegisterForm = () => {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="Email"
-              className="focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border-primary text-gray-800"
             />
           </div>
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username" className="text-primary">
+              Username
+            </Label>
             <Input
               type="text"
               id="username"
@@ -152,11 +158,13 @@ const RegisterForm = () => {
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               placeholder="Username"
-              className="focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border-primary text-gray-800"
             />
           </div>
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-primary">
+              Password
+            </Label>
             <Input
               type="password"
               id="password"
@@ -164,11 +172,13 @@ const RegisterForm = () => {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Password"
-              className="focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border-primary text-gray-800"
             />
           </div>
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="confirm-password">Confirm-password</Label>
+            <Label htmlFor="confirm-password" className="text-primary">
+              Confirm-password
+            </Label>
             <Input
               type="password"
               id="confirm-password"
@@ -176,24 +186,24 @@ const RegisterForm = () => {
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
               placeholder="Confirm-password"
-              className="focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="focus-visible:ring-0 focus-visible:ring-offset-0 bg-white border-primary text-gray-800"
             />
           </div>
         </div>
         <div className="mt-3 flex flex-col items-center w-full justify-center">
-          <CardFooter className="w-full">
+          <CardFooter className="">
             <Button onClick={handleRegister} className="w-full">
               Register
             </Button>
           </CardFooter>
 
-          <CardFooter className="w-full">
+          <CardFooter className="">
             <Button onClick={() => signIn("google")} className="w-full">
               <FcGoogle className="mr-3" />
               Register With Google
             </Button>
           </CardFooter>
-          <CardContent>
+          <CardContent className="text-primary">
             <div className="text-center font-light">
               <p>
                 Already have an account?

@@ -20,9 +20,9 @@ const InitialModal = ({ servers }: { servers: MyServer[] }) => {
 
   return (
     <Dialog open>
-      <DialogContent className="bg-white text-black p-3 overflow-hidden">
+      <DialogContent className="bg-white text-primary p-3 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-2xl text-center font-bold">
+          <DialogTitle className="text-2xl text-center font-bold text-gray-700">
             Join a server OR Create your server
           </DialogTitle>
           <DialogDescription className="text-center text-gray-500">
