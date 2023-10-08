@@ -10,7 +10,7 @@ const WelcomePage = () => {
           <div className="h-[300px] w-[300px] lg:h-[600px] md:h-[400px] md:w-[500px] relative trans">
             <Image
               fill
-              src="/images/community.jpg"
+              src="https://res.cloudinary.com/dcymjefv8/image/upload/v1696809459/collaboration/welcome/community_rzjzsd.jpg"
               alt="logo"
               className="object-cover rounded-lg"
               priority={true}
