@@ -108,8 +108,8 @@ const RegisterForm = () => {
     }
   };
   return (
-    <Card className="w-full md:w-4/5 lg:w-1/2">
-      <CardContent className="bg-white text-black">
+    <Card className="w-full">
+      <CardContent className="bg-white text-black rounded-md">
         <CardHeader className="pt-8 px-6">
           <CardTitle className="text-2xl text-center font-bold text-primary">
             Register

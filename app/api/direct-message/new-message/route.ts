@@ -2,6 +2,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
+import { pusherServer } from "@/lib/pusher";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -108,6 +109,9 @@ export async function POST(req: NextRequest) {
             directMessageId: message?.id,
           },
         });
+
+        //pusher trigger
+        // await pusherServer.trigger(conversationId, "incoming-message", message);
         return NextResponse.json(
           {
             success: true,
@@ -138,6 +142,8 @@ export async function POST(req: NextRequest) {
       });
 
       if (message) {
+        //pusher trigger
+        // await pusherServer.trigger(conversationId, "incoming-message", message);
         return NextResponse.json(
           {
             success: true,

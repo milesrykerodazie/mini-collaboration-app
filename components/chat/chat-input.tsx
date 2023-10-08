@@ -13,20 +13,24 @@ import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/modal-hook";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 
 interface ChatInputProps {
   apiUrl: string;
+  id?: string;
   query: Record<string, any>;
   name: string;
   type: "conversation" | "channel";
 }
 
-const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
+const ChatInput = ({ apiUrl, query, name, type, id }: ChatInputProps) => {
   const router = useRouter();
   const { toast } = useToast();
   const { onOpen } = useModal();
   const [isLoading, setIsLoading] = useState(false);
   const [content, setContent] = useState("");
+
+  const queryClient = useQueryClient();
 
   //send message function
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -65,6 +69,7 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
       }
     } finally {
       setIsLoading(false);
+      router.refresh();
     }
   };
 

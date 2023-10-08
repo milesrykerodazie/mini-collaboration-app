@@ -16,6 +16,7 @@ module.exports = {
       },
     },
     extend: {
+      backgroundImage: {},
       colors: {
         // mainDark: "#200221",
         // mainLight: "#f7e1f7",

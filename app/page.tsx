@@ -17,7 +17,7 @@
 import React from "react";
 
 const Welcome = () => {
-  return <div></div>;
+  return <div className="h-screen w-full overflow-hidden"></div>;
 };
 
 export default Welcome;
