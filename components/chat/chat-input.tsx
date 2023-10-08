@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import * as z from "zod";
 import qs from "query-string";
-
 import { Input } from "../ui/input";
 import { Plus, Send } from "lucide-react";
 import EmojiPicker from "../emoji-picker";
@@ -13,7 +11,6 @@ import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/modal-hook";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
 
 interface ChatInputProps {
   apiUrl: string;
@@ -30,8 +27,6 @@ const ChatInput = ({ apiUrl, query, name, type, id }: ChatInputProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [content, setContent] = useState("");
 
-  const queryClient = useQueryClient();
-
   //send message function
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,11 +41,9 @@ const ChatInput = ({ apiUrl, query, name, type, id }: ChatInputProps) => {
         content: content,
       });
 
-      if (response?.data) {
-        if (response?.data?.success === true) {
-          setContent("");
-          router.refresh();
-        }
+      if (response?.status === 200) {
+        setContent("");
+        router.refresh();
       }
     } catch (error) {
       if (error instanceof axios.AxiosError) {
@@ -58,7 +51,7 @@ const ChatInput = ({ apiUrl, query, name, type, id }: ChatInputProps) => {
         toast({
           variant: "destructive",
           title: "Sending error.",
-          description: error?.response?.data?.message,
+          description: error?.response?.data?.error,
         });
       } else {
         toast({

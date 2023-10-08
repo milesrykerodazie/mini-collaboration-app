@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/lib/auth";
 import WelcomePage from "@/components/welcome-page";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { SocketProvider } from "@/components/providers/socket-provider";
 
 const font = EB_Garamond({ subsets: ["latin"] });
 
@@ -33,11 +34,11 @@ export default async function RootLayout({
           storageKey="collaboration-theme"
         >
           <Toaster />
-          <main>
+          <SocketProvider>
             <ModalProvider />
             {session === null && <WelcomePage />}
             <QueryProvider>{children}</QueryProvider>
-          </main>
+          </SocketProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -91,12 +91,10 @@ export const ChatItem = ({
         content: newContent,
       });
 
-      if (response?.data) {
-        if (response?.data?.success === true) {
-          setIsLoading(false);
-          setIsEditing(false);
-          router.refresh();
-        }
+      if (response?.status === 200) {
+        setIsLoading(false);
+        setIsEditing(false);
+        router.refresh();
       }
     } catch (error) {
       console.log(error);

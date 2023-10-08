@@ -37,12 +37,10 @@ export const DeleteMessageModal = () => {
       });
 
       const response = await axios.delete(url);
-      if (response?.data) {
-        if (response?.data?.success === true) {
-          setIsLoading(false);
-          onClose();
-          router.refresh();
-        }
+      if (response?.status === 200) {
+        setIsLoading(false);
+        onClose();
+        router.refresh();
       }
     } catch (error) {
       console.log(error);

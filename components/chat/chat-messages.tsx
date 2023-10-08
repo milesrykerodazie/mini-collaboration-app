@@ -7,7 +7,7 @@ import { ChatItem } from "./chat-item";
 import { format } from "date-fns";
 import { useChatQuery } from "@/hooks/use-chat-query";
 import { useChatScroll } from "@/hooks/use-chat-scroll";
-import { pusherClient } from "@/lib/pusher";
+import { useChatSocket } from "@/hooks/use-chat-socket";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
@@ -41,6 +41,8 @@ const ChatMessages = ({
   type,
 }: ChatMessagesProps) => {
   const queryKey = `chat:${chatId}`;
+  const addKey = `chat:${chatId}:messages`;
+  const updateKey = `chat:${chatId}:messages:update`;
 
   const chatRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
@@ -52,25 +54,7 @@ const ChatMessages = ({
       paramKey,
       paramValue,
     });
-
-  console.log("the chat data => ", data);
-
-  // useEffect(() => {
-  //   pusherClient.subscribe(paramKey);
-
-  //   pusherClient.bind("messages:new", (data) => {
-  //     [...data?.pages];
-  //   });
-
-  //   return () => {
-  //     pusherClient.unsubscribe(paramKey);
-  //     pusherClient.unbind("messages:new", (data) => {
-  //       [...data];
-  //     });
-  //   };
-  // }, [paramKey, data]);
-
-  // useChatSocket({ queryKey, addKey, updateKey });
+  useChatSocket({ queryKey, addKey, updateKey });
   useChatScroll({
     chatRef,
     bottomRef,
