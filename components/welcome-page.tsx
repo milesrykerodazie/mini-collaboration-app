@@ -13,6 +13,7 @@ const WelcomePage = () => {
               src="/images/community.jpg"
               alt="logo"
               className="object-cover rounded-lg"
+              priority={true}
             />
           </div>
         </div>
