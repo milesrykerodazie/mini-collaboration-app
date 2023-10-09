@@ -12,6 +12,7 @@ import { DeleteServerModal } from "../modals/delete-server-modal";
 import { DeleteChannelModal } from "../modals/delete-channel-modal";
 import { EditChannelModal } from "../modals/edit-channel-modal";
 import { LeaveServerModal } from "../modals/leave-server-modal";
+import EditProfile from "../modals/edit-profile-modal";
 
 export const ModalProvider = () => {
   return (
@@ -28,6 +29,7 @@ export const ModalProvider = () => {
       <DeleteChannelModal />
       <EditChannelModal />
       <LeaveServerModal />
+      <EditProfile />
     </>
   );
 };

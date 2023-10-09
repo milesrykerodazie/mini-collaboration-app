@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { IoMdClose } from "react-icons/io";
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -40,12 +41,17 @@ const RegisterForm = () => {
   const canSubmit =
     name !== "" && email !== "" && username !== "" && password !== "";
 
+  const onDismiss = useCallback(() => {
+    router.push("/");
+  }, [router]);
+
   const handleRegister = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
 
     try {
+      setIsLoading(true);
       if (!canSubmit) {
         toast({
           variant: "destructive",
@@ -109,7 +115,14 @@ const RegisterForm = () => {
   };
   return (
     <Card className="w-full">
-      <CardContent className="bg-white text-black rounded-md">
+      <CardContent className="bg-white text-black rounded-md relative">
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="absolute top-2 right-2 bg-primary rounded-full"
+        >
+          <IoMdClose className="text-white w-6 h-6" />
+        </button>
         <CardHeader className="pt-8 px-6">
           <CardTitle className="text-2xl text-center font-bold text-primary">
             Register
@@ -192,7 +205,11 @@ const RegisterForm = () => {
         </div>
         <div className="mt-3 flex flex-col items-center w-full justify-center">
           <CardFooter className="">
-            <Button onClick={handleRegister} className="w-full">
+            <Button
+              disabled={isLoading}
+              onClick={handleRegister}
+              className="w-full"
+            >
               Register
             </Button>
           </CardFooter>

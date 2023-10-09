@@ -23,7 +23,10 @@ const UserAction = ({
         <span className="sr-only">User action</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem className="flex items-center space-x-2">
+        <DropdownMenuItem
+          onClick={() => onOpen("profile")}
+          className="flex items-center space-x-2"
+        >
           <User className="w-4 h-4" />
           <span>My Profile</span>
         </DropdownMenuItem>

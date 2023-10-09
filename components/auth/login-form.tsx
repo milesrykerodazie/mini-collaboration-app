@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { signIn } from "next-auth/react";
 
 import {
@@ -18,6 +18,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
+import { IoMdClose } from "react-icons/io";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -26,8 +27,13 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const { toast } = useToast();
 
+  const onDismiss = useCallback(() => {
+    router.push("/");
+  }, [router]);
+
   const handleLogin = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
+    setIsLoading(true);
     signIn("credentials", {
       email: email,
       password: password,
@@ -62,7 +68,14 @@ const LoginForm = () => {
   };
   return (
     <Card className="w-full">
-      <CardContent className="bg-white rounded-lg">
+      <CardContent className="bg-white rounded-lg relative">
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="absolute top-2 right-2 bg-primary rounded-full"
+        >
+          <IoMdClose className="text-white w-6 h-6" />
+        </button>
         <CardHeader className="pt-8 px-6">
           <CardTitle className="text-2xl text-center font-bold text-primary">
             Login
@@ -102,7 +115,11 @@ const LoginForm = () => {
         </div>
         <div className="mt-3 flex flex-col items-center w-full justify-center">
           <CardFooter className="">
-            <Button onClick={handleLogin} className="w-full">
+            <Button
+              disabled={isLoading}
+              onClick={handleLogin}
+              className="w-full"
+            >
               Login
             </Button>
           </CardFooter>
