@@ -1,9 +1,6 @@
 "use client";
 
 import axios from "axios";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { FormEvent, useEffect, useState } from "react";
 
 import {
@@ -14,14 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -98,7 +88,9 @@ export const EditServerModal = () => {
   });
 
   const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
+      setIsSubmitting(true);
       const response = await axios.patch(`/api/servers/${server?.id}`, {
         name: name,
         imageUrl: imageBase64,
@@ -115,6 +107,7 @@ export const EditServerModal = () => {
             image: null,
             imageBase64: "",
           }));
+          setIsSubmitting(false);
           router.refresh();
           onClose();
         }
@@ -134,6 +127,8 @@ export const EditServerModal = () => {
           description: "Something went wrong.",
         });
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

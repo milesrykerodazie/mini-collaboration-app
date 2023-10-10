@@ -1,4 +1,5 @@
 "use client";
+import { Server } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -11,7 +12,10 @@ interface ServerListProps {
 const ServerList = ({ origin, inviteCode, serverName }: ServerListProps) => {
   return (
     <Link href={`${origin}/invite/${inviteCode}`}>
-      <span className="capitalize text-sm">{serverName}</span>
+      <ul className="capitalize text-sm flex items-center space-x-1">
+        <Server className="w-4 h-4" />
+        <span>{serverName}</span>
+      </ul>
     </Link>
   );
 };

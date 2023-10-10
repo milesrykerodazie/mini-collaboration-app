@@ -34,8 +34,8 @@ export const MediaRoom = ({
         );
         const data = await resp.json();
         setToken(data.token);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
       }
     })();
   }, []);

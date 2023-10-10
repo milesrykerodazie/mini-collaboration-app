@@ -13,6 +13,7 @@ import { DeleteChannelModal } from "../modals/delete-channel-modal";
 import { EditChannelModal } from "../modals/edit-channel-modal";
 import { LeaveServerModal } from "../modals/leave-server-modal";
 import EditProfile from "../modals/edit-profile-modal";
+import { DeleteProfileModal } from "../modals/delete-profile-modal";
 
 export const ModalProvider = () => {
   return (
@@ -30,6 +31,7 @@ export const ModalProvider = () => {
       <EditChannelModal />
       <LeaveServerModal />
       <EditProfile />
+      <DeleteProfileModal />
     </>
   );
 };

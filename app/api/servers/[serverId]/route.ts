@@ -27,7 +27,17 @@ export async function DELETE(
       },
     });
 
-    return NextResponse.json(server);
+    if (server) {
+      return NextResponse.json(server);
+    } else {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Server not found.",
+        },
+        { status: 404 }
+      );
+    }
   } catch (error) {
     console.log("[SERVER_ID_DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });

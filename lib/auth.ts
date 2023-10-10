@@ -78,6 +78,7 @@ export const authOptions: NextAuthOptions = {
             username: true,
             email: true,
             image: true,
+            bio: true,
             createdAt: true,
           },
         });
