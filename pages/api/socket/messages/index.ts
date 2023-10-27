@@ -4,6 +4,14 @@ import { db } from "@/lib/db";
 import { NextApiResponseServerIo } from "@/typings";
 import { CurrentProfile } from "@/lib/get-user";
 
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_KEY,
+  api_secret: process.env.CLOUD_KEY_SECRET,
+});
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponseServerIo
@@ -14,7 +22,7 @@ export default async function handler(
 
   try {
     const profile = await CurrentProfile(req);
-    const { content, fileUrl } = req.body;
+    const { content, fileName, fileUrl, fileType } = req.body;
     const { serverId, channelId } = req.query;
 
     if (!profile) {
@@ -27,10 +35,6 @@ export default async function handler(
 
     if (!channelId) {
       return res.status(400).json({ error: "Channel ID missing" });
-    }
-
-    if (!content) {
-      return res.status(400).json({ error: "Content missing" });
     }
 
     const server = await db.server.findFirst({
@@ -70,29 +74,89 @@ export default async function handler(
       return res.status(404).json({ message: "Member not found" });
     }
 
-    const message = await db.message.create({
-      data: {
-        content,
-        fileUrl,
-        channelId: channelId as string,
-        memberId: member.id,
-      },
-      include: {
-        member: {
-          include: {
-            user: true,
+    if (fileUrl) {
+      //upload to cloudinary
+      const uploadedFile = await cloudinary.uploader.upload(fileUrl, {
+        folder: "collaboration/message/files",
+      });
+      const message = await db.message.create({
+        data: {
+          content: uploadedFile?.secure_url,
+          fileUrl: uploadedFile?.secure_url,
+          fileName: fileName,
+          fileType: fileType,
+          channelId: channelId as string,
+          memberId: member.id,
+        },
+        include: {
+          member: {
+            include: {
+              user: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    const channelKey = `chat:${channelId}:messages`;
+      //save server file to db
+      await db.messageFile.create({
+        data: {
+          public_id: uploadedFile?.public_id,
+          url: uploadedFile?.secure_url,
+          messageId: message?.id,
+        },
+      });
 
-    res?.socket?.server?.io?.emit(channelKey, message);
+      const channelKey = `chat:${channelId}:messages`;
 
-    return res.status(200).json(message);
+      res?.socket?.server?.io?.emit(channelKey, message);
+
+      return res.status(201).json(message);
+    } else {
+      const message = await db.message.create({
+        data: {
+          content: content,
+          channelId: channelId as string,
+          memberId: member.id,
+        },
+        include: {
+          member: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+
+      const channelKey = `chat:${channelId}:messages`;
+
+      res?.socket?.server?.io?.emit(channelKey, message);
+
+      return res.status(201).json(message);
+    }
   } catch (error) {
     console.log("[MESSAGES_POST]", error);
     return res.status(500).json({ message: "Internal Error" });
   }
 }
+
+// const message = await db.message.create({
+//   data: {
+//     content,
+//     fileUrl,
+//     channelId: channelId as string,
+//     memberId: member.id,
+//   },
+//   include: {
+//     member: {
+//       include: {
+//         user: true,
+//       },
+//     },
+//   },
+// });
+
+// const channelKey = `chat:${channelId}:messages`;
+
+// res?.socket?.server?.io?.emit(channelKey, message);
+
+// return res.status(200).json(message);

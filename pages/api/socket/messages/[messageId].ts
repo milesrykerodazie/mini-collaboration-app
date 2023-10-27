@@ -5,6 +5,14 @@ import { db } from "@/lib/db";
 import { NextApiResponseServerIo } from "@/typings";
 import { CurrentProfile } from "@/lib/get-user";
 
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_KEY,
+  api_secret: process.env.CLOUD_KEY_SECRET,
+});
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponseServerIo
@@ -112,6 +120,25 @@ export default async function handler(
           },
         },
       });
+
+      //if message has message file delete it from cloudinary and database
+      const messageFile = await db.messageFile.findUnique({
+        where: {
+          messageId: message?.id,
+        },
+      });
+
+      if (messageFile) {
+        // delete from cludinary
+        await cloudinary.uploader.destroy(messageFile?.public_id);
+
+        // delete from database
+        await db.messageFile.delete({
+          where: {
+            id: messageFile?.id,
+          },
+        });
+      }
     }
 
     if (req.method === "PATCH") {

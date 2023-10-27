@@ -97,19 +97,17 @@ export const MessageFileModal = () => {
         fileName: fileName,
         fileType: fileType,
         fileUrl: fileUrl,
-        rawFile: rawFile,
+        content: fileUrl,
       });
 
-      if (response?.data) {
-        if (response?.data?.success === true) {
-          setFormData({
-            fileName: "",
-            rawFile: null,
-            fileUrl: "",
-          });
-          router.refresh();
-          onClose();
-        }
+      if (response?.status === 201) {
+        setFormData({
+          fileName: "",
+          rawFile: null,
+          fileUrl: "",
+        });
+        // router.refresh();
+        onClose();
       }
     } catch (error) {
       if (error instanceof axios.AxiosError) {

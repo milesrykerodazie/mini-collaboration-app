@@ -41,9 +41,11 @@ const ChatInput = ({ apiUrl, query, name, type, id }: ChatInputProps) => {
         content: content,
       });
 
-      if (response?.status === 200) {
+      console.log("the response => ", response);
+
+      if (response?.status === 201) {
         setContent("");
-        router.refresh();
+        // router.refresh();
       }
     } catch (error) {
       if (error instanceof axios.AxiosError) {
@@ -62,7 +64,7 @@ const ChatInput = ({ apiUrl, query, name, type, id }: ChatInputProps) => {
       }
     } finally {
       setIsLoading(false);
-      router.refresh();
+      // router.refresh();
     }
   };
 

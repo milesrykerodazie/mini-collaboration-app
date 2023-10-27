@@ -5,6 +5,14 @@ import { NextApiResponseServerIo } from "@/typings";
 import { getCurrentUser } from "@/lib/auth";
 import { CurrentProfile } from "@/lib/get-user";
 
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_KEY,
+  api_secret: process.env.CLOUD_KEY_SECRET,
+});
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponseServerIo
@@ -15,7 +23,7 @@ export default async function handler(
 
   try {
     const profile = await CurrentProfile(req);
-    const { content, fileUrl } = req.body;
+    const { content, fileName, fileUrl, fileType } = req.body;
     const { conversationId } = req.query;
 
     if (!profile) {
@@ -24,10 +32,6 @@ export default async function handler(
 
     if (!conversationId) {
       return res.status(400).json({ error: "Conversation ID missing" });
-    }
-
-    if (!content) {
-      return res.status(400).json({ error: "Content missing" });
     }
 
     const conversation = await db.conversation.findFirst({
@@ -73,27 +77,66 @@ export default async function handler(
       return res.status(404).json({ message: "Member not found" });
     }
 
-    const message = await db.directMessage.create({
-      data: {
-        content,
-        fileUrl,
-        conversationId: conversationId as string,
-        memberId: member.id,
-      },
-      include: {
-        member: {
-          include: {
-            user: true,
+    if (fileUrl) {
+      //upload to cloudinary
+      const uploadedFile = await cloudinary.uploader.upload(fileUrl, {
+        folder: "collaboration/direct-message/files",
+      });
+
+      const message = await db.directMessage.create({
+        data: {
+          content: uploadedFile?.secure_url,
+          fileUrl: uploadedFile?.secure_url,
+          fileName: fileName,
+          fileType: fileType,
+          conversationId: conversationId as string,
+          memberId: member.id,
+        },
+        include: {
+          member: {
+            include: {
+              user: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    const channelKey = `chat:${conversationId}:messages`;
+      //save server file to db
+      await db.directMessageFile.create({
+        data: {
+          public_id: uploadedFile?.public_id,
+          url: uploadedFile?.secure_url,
+          directMessageId: message?.id,
+        },
+      });
 
-    res?.socket?.server?.io?.emit(channelKey, message);
+      const channelKey = `chat:${conversationId}:messages`;
 
-    return res.status(200).json(message);
+      res?.socket?.server?.io?.emit(channelKey, message);
+
+      return res.status(201).json(message);
+    } else {
+      const message = await db.directMessage.create({
+        data: {
+          content,
+          conversationId: conversationId as string,
+          memberId: member.id,
+        },
+        include: {
+          member: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+
+      const channelKey = `chat:${conversationId}:messages`;
+
+      res?.socket?.server?.io?.emit(channelKey, message);
+
+      return res.status(201).json(message);
+    }
   } catch (error) {
     console.log("[DIRECT_MESSAGES_POST]", error);
     return res.status(500).json({ message: "Internal Error" });
