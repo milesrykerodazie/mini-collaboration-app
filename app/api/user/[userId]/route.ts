@@ -107,7 +107,7 @@ export async function PATCH(
           );
         } else {
           return NextResponse.json(
-            { success: false, message: "User Profile Updated" },
+            { success: false, message: "User Profile Not Updated" },
             { status: 400 }
           );
         }
@@ -146,7 +146,7 @@ export async function PATCH(
           );
         } else {
           return NextResponse.json(
-            { success: false, message: "User Profile Updated" },
+            { success: false, message: "User Profile Not Updated" },
             { status: 400 }
           );
         }
@@ -200,13 +200,37 @@ export async function DELETE(
     }
 
     //find the server and include the image
-    const foundUser = await db.user.delete({
+    const foundUser = await db.user.findUnique({
       where: {
         id: params.userId,
       },
+      include: {
+        userImage: true,
+      },
     });
 
-    if (foundUser) {
+    if (!foundUser) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "user not found.",
+        },
+        { status: 404 }
+      );
+    }
+
+    if (foundUser?.userImage !== null) {
+      await cloudinary.uploader.destroy(foundUser?.userImage?.public_id);
+    }
+
+    //find the server and include the image
+    const deletedUser = await db.user.delete({
+      where: {
+        id: foundUser?.id,
+      },
+    });
+
+    if (deletedUser) {
       return NextResponse.json(
         {
           success: true,
@@ -218,9 +242,9 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          message: "User not found.",
+          message: "User Not Deleted.",
         },
-        { status: 404 }
+        { status: 500 }
       );
     }
   } catch (error) {
