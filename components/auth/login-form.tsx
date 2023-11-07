@@ -144,7 +144,7 @@ const LoginForm = () => {
           </CardContent>
         </div>
         <CardFooter className="text-[13px] text-gray-500 flex flex-col space-y-1">
-          <span>test-email: user2@gmail.com</span>
+          <span>test-email: test@gmail.com</span>
           <span>test-password: 1234567</span>
         </CardFooter>
       </CardContent>
